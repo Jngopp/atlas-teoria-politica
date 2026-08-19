@@ -1,0 +1,9 @@
+window.POSTDOC_GUIDES=window.POSTDOC_GUIDES||{};
+window.PD=(overview,argument,concepts,debates,reception,comparisons,bibliography,exam)=>({overview,argument,concepts,debates,reception,comparisons,bibliography,exam});
+window.getPostdocGuide=function(w){return POSTDOC_GUIDES[w.id]||null};
+window.POSTDOC_EXPECTED_IDS=['gilgamesh','hammurabi','merikare','peasant','confucius','mencius','mozi','laozi','xunzi','hanfeizi','shangyang','kautilya','manu','herodotus','thucydides','sophocles','republic','statesman','laws','politics','nicomachean','xenophon','polybius','cicero','cicero-laws','sallust','livy','seneca','tacitus','citygod','farabi','avicenna','averroes','maimonides','aquinas','dante','marsilius','more','prince','discourses','bodin','althusius','grotius','harrington','leviathan','spinoza','locke','hume','montesquieu','rousseau','smith','federalist','sieyes','burke','paine','wollstonecraft','constant','hegel','tocqueville','manifesto','marx18','mill','mill-gov','nietzsche','dubois','weber','lenin','luxemburg','dewey','gramsci','schmitt','hayek','arendt-origins','arendt','beauvoir','fanon','berlin','rawls','nozick','foucault','pateman','mills-racial','young','habermas','ranciere','pettit','butler','mouffe','mbembe','bolivar-j','bolivar-a','facundo','alberdi','marti','rodo','mariategui','haya','peron','prebisch','freire','cardoso','arico','zavaleta','roig','garcia','quijano','laclau','dussel','odonnell'];
+window.auditPostdocGuides=function(){
+ const ids=POSTDOC_EXPECTED_IDS,missing=ids.filter(id=>!POSTDOC_GUIDES[id]);
+ const shallow=ids.filter(id=>{const g=POSTDOC_GUIDES[id];if(!g)return false;const prose=[...(g.overview||[]),...(g.argument||[]),...(g.debates||[]),...(g.reception||[]),...(g.comparisons||[])].join(' ');return prose.length<2500||Object.keys(g.concepts||{}).length<4||(g.bibliography||[]).length<4;});
+ return {expected:ids.length,complete:ids.length-missing.length,missing,shallow,ok:missing.length===0&&shallow.length===0};
+};
