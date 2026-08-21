@@ -1,0 +1,10 @@
+// Inserta el subcanon argentino en las coyunturas de Mundo y contextos.
+(function(){
+ const all=window.WORLD_CONTEXTS||[];
+ const patch=(id,ids,label)=>{const c=all.find(x=>x.id===id);if(!c)return;(c.works??=[]);ids.forEach(w=>{if(!c.works.includes(w))c.works.push(w)});(c.centers??=[]);if(!c.centers.includes(label))c.centers.push(label);(c.places??=[]);if(!c.places.some(p=>p.name==='Buenos Aires / Argentina'))c.places.push({name:'Buenos Aires / Argentina',lon:-58.3816,lat:-34.6037,note:'Centro de producción, disputa y recepción del pensamiento político argentino.',works:ids.slice(0,12)});else{const p=c.places.find(p=>p.name==='Buenos Aires / Argentina');p.works=[...new Set([...(p.works||[]),...ids])];}
+  if(c.entities&&!c.entities.some(e=>e.name==='Argentina'))c.entities.push({name:'Argentina',dates:id==='long-19th'?'1816–1914':id==='worldwars'?'1914–1945':id==='coldwar-decolonization'?'1945–1991':'1991–presente',kind:'Estado nacional / república federal',capital:'Buenos Aires',lon:-64,lat:-36,rx:8,ry:13,note:'Entidad estatal central para el corpus argentino del período; sus regímenes e instituciones cambian sustancialmente dentro del intervalo.'});};
+ patch('long-19th',['echeverria-dogma','justo-historia','rojas-restauracion','ugarte-porvenir'],'Buenos Aires · Generación del 37, socialismo y cuestión nacional');
+ patch('worldwars',['scalabrini-politica-britanica'],'Buenos Aires · FORJA y nacionalismo económico');
+ patch('coldwar-decolonization',['romero-ideas-argentina','peron-conduccion','eva-razon','sampay-teoria-estado','jauretche-profetas','hernandez-conciencia','germani-politica-sociedad','cooke-apuntes','peron-modelo','portantiero-usos-gramsci','oszlak-estado-argentino','botana-tradicion','rozitchner-peron','sigal-veron-peron','halperin-nacion-desierto','feinmann-filosofia-nacion','sampay-constitucion-pueblo'],'Buenos Aires · peronismo, Estado, marxismo y transición democrática');
+ patch('global-contemporary',['halperin-agonia','nino-deliberativa','nun-democracia','altamirano-masas','rinesi-politica-tragedia','selci-militancia'],'Argentina · democracia, memoria, teoría política y organización');
+})();
