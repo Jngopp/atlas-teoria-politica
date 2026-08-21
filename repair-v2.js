@@ -1,7 +1,7 @@
-// Reparación estructural V3: un único dossier, profundidad completa y visualizaciones estables.
+// Reparación estructural V4: dossier único, sinopsis, texto primario y visualizaciones estables.
 (function(){
  const el=id=>document.getElementById(id);
- const esc=s=>(s??'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
+ const esc=s=>(s??'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
  const list=a=>`<ul class="v2-list">${(a||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
  const paras=a=>(a||[]).map(x=>`<p>${esc(x)}</p>`).join('');
  const uniq=a=>[...new Set(a)];
@@ -9,6 +9,8 @@
  function work(id){return WORKS.find(w=>w.id===id);}
  function safeGuide(w){try{return typeof getRichStudyGuide==='function'?getRichStudyGuide(w):(typeof getStudyGuide==='function'?getStudyGuide(w):null)}catch{return null}}
  function safeClass(w){try{return typeof getMiniClass==='function'?getMiniClass(w):null}catch{return null}}
+ function synopsisBlock(w){try{return window.ClassicReader?.synopsisHTML(w)||''}catch{return''}}
+ function primaryTextBlock(w){try{return window.ClassicReader?.textHTML(w)||''}catch{return''}}
 
  async function openDossier(id){
   const w=work(id); if(!w)return;
@@ -22,6 +24,7 @@
    </section>
    <div class="v2-dossier-grid"><main>
     <section class="v2-lecture"><div class="eyebrow">CLASE UNIVERSITARIA</div><h2>Cómo leer ${esc(w.title)}</h2>${paras(mc.lecture?.length?mc.lecture:g.summary)}</section>
+    ${synopsisBlock(w)}
     <section class="v2-block"><div class="v2-number">01</div><div><div class="eyebrow">PROBLEMA Y TESIS</div><h2>Qué problema intenta resolver y qué respuesta construye</h2>${paras(g.problemAnalysis?.length?g.problemAnalysis:[w.context,w.thesis])}<div class="v2-thesis-callout"><b>Tesis en una frase</b><p>${esc(w.thesis)}</p></div></div></section>
     <section class="v2-block"><div class="v2-number">02</div><div><div class="eyebrow">RECORRIDO ARGUMENTAL</div><h2>Cómo avanza el razonamiento</h2><p class="v2-intro-note">No es un índice mecánico: estos pasos muestran qué función cumple cada momento dentro de la respuesta general de la obra.</p>${list(g.architecture?.length?g.architecture:mc.route)}</div></section>
     <section class="v2-block"><div class="v2-number">03</div><div><div class="eyebrow">CONCEPTOS</div><h2>Vocabulario central, definido en contexto</h2><p class="v2-intro-note">Las definiciones corresponden al problema histórico de la obra. El mismo término puede significar algo distinto en otro autor o período.</p>${concepts(g.keys)}</div></section>
@@ -30,7 +33,8 @@
     <section class="v2-block"><div class="v2-number">06</div><div><div class="eyebrow">RECEPCIÓN</div><h2>Cómo cambió la obra al ser leída después</h2><p class="v2-intro-note">Recepción no equivale a influencia lineal: incluye apropiaciones, críticas, traducciones conceptuales y relecturas disciplinarias.</p>${list(g.reception)}</div></section>
     <section class="v2-block v2-exam"><div class="v2-number">07</div><div><div class="eyebrow">PARA EXAMEN</div><h2>Qué tenés que poder explicar</h2>${list(g.study?.length?g.study:mc.exam)}</div></section>
     <section class="v2-block"><div class="v2-number">08</div><div><div class="eyebrow">PARA SEGUIR</div><h2>Bibliografía secundaria y líneas de profundización</h2>${list(g.secondary?.length?g.secondary:mc.reading)}</div></section>
-   </main><aside class="v2-side"><div class="v2-sidebox"><h3>Ficha rápida</h3><p><b>Autor:</b> ${esc(w.author)}</p><p><b>Fecha:</b> ${esc(w.date)}</p><p><b>Tradición:</b> ${esc(w.trad)}</p><p><b>Época:</b> ${esc(typeof eraName==='function'?eraName(w.era):w.era)}</p>${w.reader?`<a class="readerlink" target="_blank" rel="noopener" href="${w.reader}">Leer edición disponible ↗</a>`:''}<button class="primary v2-full" id="v2Papers">Buscar bibliografía</button></div></aside></div>`;
+   </main><aside class="v2-side"><div class="v2-sidebox"><h3>Ficha rápida</h3><p><b>Autor:</b> ${esc(w.author)}</p><p><b>Fecha:</b> ${esc(w.date)}</p><p><b>Tradición:</b> ${esc(w.trad)}</p><p><b>Época:</b> ${esc(typeof eraName==='function'?eraName(w.era):w.era)}</p></div>${primaryTextBlock(w)}<div class="v2-sidebox"><h3>Investigar</h3><button class="primary v2-full" id="v2Papers">Buscar bibliografía</button></div></aside></div>`;
+  try{window.ClassicReader?.bind(w)}catch{}
   try{dialog.showModal();}catch{dialog.setAttribute('open','');}
   const img=el('v2AuthorImg'); if(img&&typeof wikiImage==='function'){try{const src=await wikiImage(w.author);if(src)img.src=src;else if(typeof setImg==='function')setImg(img,w.author,w.author)}catch{}}
   const pb=el('v2Papers');if(pb)pb.onclick=()=>{try{dialog.close()}catch{};if(typeof show==='function')show('papers');const pq=el('pq');if(pq)pq.value=w.author+' '+w.title;if(typeof searchPapers==='function')searchPapers();};
