@@ -1,0 +1,12 @@
+/* Raíces · Fase 2B */
+.concept-hero{background:#fff;border:1px solid var(--line);border-radius:24px;padding:17px;margin:14px 0;box-shadow:var(--shadow)}
+.concept-hero h2{margin:3px 0 8px}.concept-hero p{margin:0;color:var(--muted);line-height:1.5}
+.recommend-box{margin-top:14px;padding:14px;border-radius:18px;background:linear-gradient(135deg,var(--soft),#fff);border:1px solid var(--line)}
+.recommend-box small{display:block;font-size:10px;font-weight:950;letter-spacing:.08em;color:var(--brand)}.recommend-box b{display:block;font-size:18px;margin:5px 0}.recommend-box span{display:block;font-size:12px;line-height:1.45;color:var(--muted);margin-bottom:8px}
+.concept-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.concept-summary>div{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px;text-align:center}.concept-summary b{display:block;font-size:23px}.concept-summary small{font-size:10px;color:var(--muted)}
+.concept-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.concept-title-row h3{margin:0}.concept-title-row .secondary{width:auto;padding:8px 11px}
+.concept-group{margin-top:16px}.concept-group h4{margin:0 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.concept-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) 105px;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:#fff;border-radius:15px;padding:11px;margin:6px 0}.concept-row b{display:block;font-size:13px}.concept-row small{display:block;font-size:10px;color:var(--muted);line-height:1.35;margin-top:3px}.concept-score{text-align:right}.concept-score>span{font-weight:950;font-size:13px}.concept-score>div{height:6px;background:#ece5dd;border-radius:99px;overflow:hidden;margin:4px 0}.concept-score i{display:block;height:100%;background:var(--brand);border-radius:99px}.concept-score small{font-size:9px}
+.concept-meter{height:11px;background:#ece5dd;border-radius:99px;overflow:hidden;margin:12px 0}.concept-meter i{display:block;height:100%;background:var(--brand);border-radius:99px}
+.mini-concept{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:9px 0;font-size:13px}.mini-concept:first-of-type{border-top:0}.mini-concept span{font-weight:900;color:var(--brand)}
+@media(min-width:640px){.concept-hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center}.recommend-box{margin-top:0}}
