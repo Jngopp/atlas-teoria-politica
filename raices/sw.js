@@ -1,5 +1,5 @@
-const CACHE="raices-quechua-a1-v7-phase4";
-const ASSETS=["./","index.html","styles-v2.css","phase2.css","phase2b.css","phase4.css","data-meta.js","data-u1-2.js","data-u3-4.js","data-u5-6.js","data-u7-8.js","data-final.js","app-core.js","app-lessons.js","app-final.js","phase2-engine.js","phase2b-refined.js","phase4-stories.js","phase4-ui.js","manifest.webmanifest","icon.svg"];
+const CACHE="raices-multilingual-a1-v8";
+const ASSETS=["./","index.html","styles-v2.css","phase2.css","phase2b.css","phase4.css","multi-a1.css","data-meta.js","data-u1-2.js","data-u3-4.js","data-u5-6.js","data-u7-8.js","data-final.js","app-core.js","app-lessons.js","app-final.js","phase2-engine.js","phase2b-refined.js","phase4-stories.js","phase4-ui.js","a1-aymara.js","a1-guarani.js","a1-mapuzugun.js","multi-a1-engine.js","manifest.webmanifest","icon.svg"];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(e.request.method==="GET"&&resp.ok){const copy=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return resp}).catch(()=>caches.match("./")))));
