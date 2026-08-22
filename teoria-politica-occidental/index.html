@@ -8,10 +8,10 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="systems.css?v=8">
-<link rel="stylesheet" href="systems-teaching.css?v=8">
-<link rel="stylesheet" href="learning-flow.css?v=8">
-<link rel="stylesheet" href="systems-dense.css?v=8">
+<link rel="stylesheet" href="systems.css?v=9">
+<link rel="stylesheet" href="systems-teaching.css?v=9">
+<link rel="stylesheet" href="learning-flow.css?v=9">
+<link rel="stylesheet" href="systems-dense.css?v=9">
 <title>POLIS · Teoría Política Occidental</title>
 </head>
 <body>
@@ -21,9 +21,7 @@
  <div class="stats"><span>🔥 <b id="streak">0</b></span><span>⚡ <b id="xp">0</b></span><span>❤️ <b id="hearts">5</b></span></div>
  <button id="settingsBtn" class="settings-top" aria-label="Ajustes" title="Ajustes">⚙️</button>
 </header>
-<main id="screen">
- <div class="page" id="polisBoot"><section class="hero"><div class="eyebrow">POLIS</div><h1>Cargando Sistemas…</h1><p>POLIS inicia primero el núcleo estable y después incorpora las capas avanzadas sin bloquear la interfaz.</p></section></div>
-</main>
+<main id="screen"><div class="page" id="polisBoot"><section class="hero"><div class="eyebrow">POLIS</div><h1>Cargando Sistemas…</h1><p>El núcleo estable se inicia primero; las capas conceptuales se validan por separado.</p></section></div></main>
 <nav class="bottom-nav">
  <button class="nav-btn" data-tab="route">🗺️<span>Ruta</span></button>
  <button class="nav-btn active" id="systemsBtn">🧠<span>Sistemas</span></button>
@@ -37,10 +35,7 @@
 <div id="modal" class="modal hidden"></div>
 <script>
 window.POLIS_BOOT_ERROR=null;
-window.addEventListener('error',e=>{
- const where=e.filename?` · ${e.filename.split('/').pop()}:${e.lineno||'?'}:${e.colno||'?'}`:'';
- window.POLIS_BOOT_ERROR=(e.message||'error de carga')+where;
-});
+window.addEventListener('error',e=>{const where=e.filename?` · ${e.filename.split('/').pop()}:${e.lineno||'?'}:${e.colno||'?'}`:'';window.POLIS_BOOT_ERROR=(e.message||'error de carga')+where;});
 </script>
 <script src="../data.js"></script>
 <script src="../world-context-data.js"></script>
@@ -48,28 +43,19 @@ window.addEventListener('error',e=>{
 <script src="curriculum.js"></script>
 <script src="app-loader.js?v=3"></script>
 <script>
-setTimeout(()=>{
- const s=document.getElementById('screen');
- if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.querySelector('.systems-page') && !s.textContent.includes('Diagnóstico:')){
-  s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El núcleo no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
- }
-},4200);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=8').catch(()=>{}));
+setTimeout(()=>{const s=document.getElementById('screen');if(s&&!s.querySelector('.module')&&!s.querySelector('.works-grid')&&!s.querySelector('.concept-grid')&&!s.querySelector('.skill-grid')&&!s.querySelector('.systems-page')&&!s.textContent.includes('Diagnóstico:')){s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El núcleo no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||window.POLIS_LEARNING_ERROR||'carga incompleta de recursos')+'</p></section></div>'; }},4200);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=9').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
-<script src="systems-data.js?v=8"></script>
-<script src="systems-teaching-data.js?v=8"></script>
-<script src="systems-discovery-data.js?v=8"></script>
-<script src="systems-v8-bootstrap.js?v=8"></script>
+<script src="systems-data.js?v=9"></script>
+<script src="systems-teaching-data.js?v=9"></script>
+<script src="systems-discovery-data.js?v=9"></script>
+<script src="systems-v9-bootstrap.js?v=9"></script>
 <script>
 window.addEventListener('polis:ready',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
-window.addEventListener('polis:systemsReady',()=>setTimeout(()=>{window.POLIS_SYSTEMS_UI?.renderHome();window.POLIS_DENSE_UI?.refresh()},0),{once:true});
-window.addEventListener('polis:v8Ready',e=>{
- setTimeout(()=>{window.POLIS_SYSTEMS_UI?.renderHome();window.POLIS_DENSE_UI?.refresh()},0);
- const failures=e.detail?.failures||[];
- if(failures.length) console.warn('POLIS inició con capas avanzadas omitidas:',failures);
-},{once:true});
-setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome();window.POLIS_DENSE_UI?.refresh()},1800);
+window.addEventListener('polis:systemsReady',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
+window.addEventListener('polis:v9Ready',e=>{setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0);const failures=e.detail?.failures||[];if(failures.length)console.warn('POLIS inició omitiendo capas avanzadas:',failures);},{once:true});
+setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},1800);
 </script>
 </body>
 </html>
