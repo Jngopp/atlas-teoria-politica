@@ -16,7 +16,9 @@
  <button class="brand" data-tab="route"><span class="mark">Π</span><span><b>POLIS</b><small>teoría política occidental</small></span></button>
  <div class="stats"><span>🔥 <b id="streak">0</b></span><span>⚡ <b id="xp">0</b></span><span>❤️ <b id="hearts">5</b></span></div>
 </header>
-<main id="screen"></main>
+<main id="screen">
+ <div class="page" id="polisBoot"><section class="hero"><div class="eyebrow">POLIS</div><h1>Cargando la ruta de teoría política…</h1><p>El núcleo del curso se está iniciando. Las guías avanzadas del Atlas se incorporan después, sin bloquear esta pantalla.</p></section></div>
+</main>
 <nav class="bottom-nav">
  <button class="nav-btn active" data-tab="route">🗺️<span>Ruta</span></button>
  <button class="nav-btn" data-tab="works">📚<span>Obras</span></button>
@@ -27,25 +29,24 @@
 </nav>
 </div>
 <div id="modal" class="modal hidden"></div>
+<script>
+window.POLIS_BOOT_ERROR=null;
+window.addEventListener('error',e=>{window.POLIS_BOOT_ERROR=e.message||'error de carga'});
+</script>
 <script src="../data.js"></script>
-<script src="../corrections.js"></script>
 <script src="../world-context-data.js"></script>
-<script src="../postdoc-core.js"></script>
-<script src="../postdoc-greece.js"></script>
-<script src="../postdoc-rome.js"></script>
-<script src="../postdoc-medieval-a.js"></script>
-<script src="../postdoc-medieval-b.js"></script>
-<script src="../postdoc-modern-a.js"></script>
-<script src="../postdoc-modern-b.js"></script>
-<script src="../postdoc-revolutions-a.js"></script>
-<script src="../postdoc-revolutions-b.js"></script>
-<script src="../postdoc-contemporary-a.js"></script>
-<script src="../postdoc-contemporary-b.js"></script>
-<script src="../postdoc-contemporary-c.js"></script>
-<script src="../postdoc-contemporary-d.js"></script>
-<script src="../postdoc-contemporary-e.js"></script>
+<script src="genealogies.js"></script>
 <script src="curriculum.js"></script>
 <script src="app.js"></script>
-<script>if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
+<script>
+setTimeout(()=>{
+ const s=document.getElementById('screen');
+ if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid')){
+  s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>Actualizá esta página una vez. El curso base está publicado y esta pantalla evita que un error secundario deje la aplicación completamente en blanco.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
+ }
+},1500);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+<script src="enrichment.js"></script>
 </body>
 </html>
