@@ -1,5 +1,5 @@
-const CACHE='polis-western-v3';
-const CORE=['./','index.html','styles.css','curriculum.js','app.js','app-loader.js','genealogies.js','enrichment.js','manifest.webmanifest','icon.svg','../data.js','../world-context-data.js'];
+const CACHE='polis-western-v4';
+const CORE=['./','index.html','styles.css','systems.css','curriculum.js','app.js','app-loader.js','genealogies.js','enrichment.js','systems-data.js','systems-engine.js','manifest.webmanifest','icon.svg','../data.js','../world-context-data.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 function put(req,resp){if(resp&&resp.ok&&new URL(req.url).origin===location.origin){const cp=resp.clone();caches.open(CACHE).then(c=>c.put(req,cp))}return resp}
