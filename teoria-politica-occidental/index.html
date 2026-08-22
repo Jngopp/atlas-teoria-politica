@@ -8,8 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="systems.css?v=5">
-<link rel="stylesheet" href="systems-teaching.css?v=5">
+<link rel="stylesheet" href="systems.css?v=6">
+<link rel="stylesheet" href="systems-teaching.css?v=6">
+<link rel="stylesheet" href="learning-flow.css?v=6">
 <title>POLIS · Teoría Política Occidental</title>
 </head>
 <body>
@@ -17,6 +18,7 @@
 <header class="topbar">
  <button class="brand" data-tab="route"><span class="mark">Π</span><span><b>POLIS</b><small>teoría política occidental</small></span></button>
  <div class="stats"><span>🔥 <b id="streak">0</b></span><span>⚡ <b id="xp">0</b></span><span>❤️ <b id="hearts">5</b></span></div>
+ <button id="settingsBtn" class="settings-top" aria-label="Ajustes" title="Ajustes">⚙️</button>
 </header>
 <main id="screen">
  <div class="page" id="polisBoot"><section class="hero"><div class="eyebrow">POLIS</div><h1>Cargando la ruta de teoría política…</h1><p>El núcleo del curso se está iniciando. Las guías avanzadas del Atlas se incorporan después, sin bloquear esta pantalla.</p></section></div>
@@ -50,17 +52,19 @@ setTimeout(()=>{
  if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.querySelector('.systems-page') && !s.textContent.includes('Diagnóstico:')){
   s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El curso base está publicado, pero el motor no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
  }
-},2600);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=5').catch(()=>{}));
+},2800);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=6').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
-<script src="systems-data.js?v=5"></script>
-<script src="systems-teaching-data.js?v=5"></script>
-<script src="systems-teaching-loader.js?v=5"></script>
+<script src="systems-data.js?v=6"></script>
+<script src="systems-teaching-data.js?v=6"></script>
+<script src="systems-discovery-data.js?v=6"></script>
+<script src="systems-teaching-loader.js?v=6"></script>
+<script src="settings.js?v=6"></script>
 <script>
 window.addEventListener('polis:ready',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
 window.addEventListener('polis:systemsReady',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
-setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},1100);
+setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},1200);
 </script>
 </body>
 </html>
