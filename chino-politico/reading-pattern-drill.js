@@ -1,0 +1,13 @@
+/* 政读 · práctica adaptativa de conectores y gramática escrita */
+(function(){
+  if(!window.ZhengduReading)return;
+  const P=ZhengduReading.patterns;
+  function ps(i){return strength(`gp:${i}`)}
+  function due(i){const r=state.memory[`gp:${i}`];return !r||!r.introduced||r.due<=Date.now()}
+  function options(i,field){const correct=P[i][field],pool=shuffle(P.filter((_,j)=>j!==i).map(x=>x[field])).slice(0,3),opts=shuffle([correct,...pool]);return {opts,a:opts.indexOf(correct)}}
+  function startPatternPractice(){const ids=P.map((_,i)=>i).sort((a,b)=>{const da=due(a)?1:0,db=due(b)?1:0;return db-da+(ps(a)??20)-(ps(b)??20)}).slice(0,8);const qs=ids.map((i,n)=>{const p=P[i],byMeaning=n%2===0,o=options(i,byMeaning?'m':'f');return {q:byMeaning?`¿Qué significa «${p.h}»?`:`¿Qué función cumple «${p.h}» en prosa política?`,opts:o.opts,a:o.a,id:`gp:${i}`}});runQuestions(qs,{title:'🔗 Conectores de lectura',source:'reading-grammar',onFinish:score=>{modal.innerHTML=`<div class="shell"><div style="font-size:60px;text-align:center">🔗</div><h2>${score}/${qs.length}</h2><p>Sesión de gramática escrita completada. Los conectores entraron al SRS.</p><button id="gpDone" class="primary full">Volver</button></div>`;document.querySelector('#gpDone').onclick=()=>{closeModal();renderRead()}}})}
+  function card(){const introduced=P.filter((_,i)=>ps(i)!=null).length,dueNow=P.filter((_,i)=>due(i)).length;return `<section class="card rd-pattern-practice"><div><h3>🔗 Bisagras de lectura</h3><p class="note">Practicá 根据、通过、同时、进一步、以及 y otras estructuras que organizan documentos.</p></div><div class="badge-row"><span class="badge">${introduced}/${P.length} practicadas</span><span class="badge">${dueNow} para revisar</span></div><button id="gpStart" class="secondary full">Practicar 8 conectores</button></section>`}
+  const baseRead=renderRead;renderRead=function(){baseRead();const hero=screen.querySelector('.hero');if(hero){const wrap=document.createElement('div');wrap.innerHTML=card();hero.insertAdjacentElement('afterend',wrap);const b=document.querySelector('#gpStart');if(b)b.onclick=startPatternPractice}};
+  const basePractice=renderPractice;renderPractice=function(){basePractice();const wrap=document.createElement('div');wrap.innerHTML=card();screen.appendChild(wrap);const b=document.querySelector('#gpStart');if(b)b.onclick=startPatternPractice};
+  window.ZhengduPatternPractice={start:startPatternPractice};
+})();
