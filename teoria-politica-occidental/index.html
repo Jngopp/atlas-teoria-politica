@@ -31,21 +31,24 @@
 <div id="modal" class="modal hidden"></div>
 <script>
 window.POLIS_BOOT_ERROR=null;
-window.addEventListener('error',e=>{window.POLIS_BOOT_ERROR=e.message||'error de carga'});
+window.addEventListener('error',e=>{
+ const where=e.filename?` · ${e.filename.split('/').pop()}:${e.lineno||'?'}:${e.colno||'?'}`:'';
+ window.POLIS_BOOT_ERROR=(e.message||'error de carga')+where;
+});
 </script>
 <script src="../data.js"></script>
 <script src="../world-context-data.js"></script>
 <script src="genealogies.js"></script>
 <script src="curriculum.js"></script>
-<script src="app.js"></script>
+<script src="app-loader.js?v=3"></script>
 <script>
 setTimeout(()=>{
  const s=document.getElementById('screen');
- if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid')){
-  s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>Actualizá esta página una vez. El curso base está publicado y esta pantalla evita que un error secundario deje la aplicación completamente en blanco.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
+ if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.textContent.includes('Diagnóstico:')){
+  s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El curso base está publicado, pero el motor no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
  }
-},1500);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+},2200);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=3').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
 </body>
