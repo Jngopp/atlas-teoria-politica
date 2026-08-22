@@ -1,5 +1,11 @@
-const CACHE='polis-western-v1';
-const CORE=['./','index.html','styles.css','curriculum.js','app.js','manifest.webmanifest','icon.svg','../data.js','../corrections.js','../world-context-data.js','../postdoc-core.js','../postdoc-greece.js','../postdoc-rome.js','../postdoc-medieval-a.js','../postdoc-medieval-b.js','../postdoc-modern-a.js','../postdoc-modern-b.js','../postdoc-revolutions-a.js','../postdoc-revolutions-b.js','../postdoc-contemporary-a.js','../postdoc-contemporary-b.js','../postdoc-contemporary-c.js','../postdoc-contemporary-d.js','../postdoc-contemporary-e.js'];
+const CACHE='polis-western-v2';
+const CORE=['./','index.html','styles.css','curriculum.js','app.js','genealogies.js','enrichment.js','manifest.webmanifest','icon.svg','../data.js','../world-context-data.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{if(resp.ok&&new URL(e.request.url).origin===location.origin){const cp=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,cp))}return resp}).catch(()=>caches.match('./'))))});
+function put(req,resp){if(resp&&resp.ok&&new URL(req.url).origin===location.origin){const cp=resp.clone();caches.open(CACHE).then(c=>c.put(req,cp))}return resp}
+self.addEventListener('fetch',e=>{
+ if(e.request.method!=='GET')return;
+ const u=new URL(e.request.url),fresh=e.request.mode==='navigate'||/\.(?:js|css|html)$/.test(u.pathname);
+ if(fresh){e.respondWith(fetch(e.request).then(r=>put(e.request,r)).catch(()=>caches.match(e.request).then(r=>r||caches.match('./'))));return}
+ e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>put(e.request,x)).catch(()=>caches.match('./'))));
+});

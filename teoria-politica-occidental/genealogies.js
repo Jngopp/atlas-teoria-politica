@@ -1,0 +1,7 @@
+window.CLASSIC_GENEALOGIES=[
+ {id:'republica',name:'República, virtud y libertad',color:'#9f3d2d',desc:'De la polis y la constitución mixta a la libertad republicana como no-dominación.',works:['republic','politics','polybius','cicero','discourses','montesquieu','rousseau','federalist','tocqueville','pettit']},
+ {id:'soberania',name:'Soberanía, contrato y obligación',color:'#2d617f',desc:'La formación moderna de la autoridad soberana, el consentimiento, los derechos y el problema de la obediencia.',works:['bodin','leviathan','spinoza','locke','rousseau','sieyes','hegel','rawls','nozick']},
+ {id:'liberalismo',name:'Liberalismo, representación y democracia',color:'#456d58',desc:'De derechos, límites y representación a pluralismo, igualdad democrática y justicia institucional.',works:['locke','montesquieu','federalist','constant','tocqueville','mill','mill-gov','berlin','rawls','habermas']},
+ {id:'critica',name:'Idealismo, socialismo y hegemonía',color:'#68547d',desc:'De la libertad institucional hegeliana a la crítica del capitalismo, el Estado y la construcción hegemónica.',works:['hegel','manifesto','marx18','lenin','luxemburg','gramsci','laclau','mouffe']},
+ {id:'poder',name:'Poder, decisión y subjetivación',color:'#474c55',desc:'Genealogías que desplazan la mirada desde la ley hacia moral, violencia, disciplina, identidad y formas de subjetivación.',works:['nietzsche','weber','schmitt','arendt-origins','foucault','butler','ranciere','mbembe']}
+];
