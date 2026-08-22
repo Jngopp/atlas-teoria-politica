@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#aa342a">
+<meta name="description" content="政读 Zhèngdú: chino simplificado para leer textos políticos chinos.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.3/dist/hanzi-writer.min.js"></script>
+<title>政读 Zhèngdú · Chino político</title>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <button class="brand" data-tab="learn"><span class="brand-cn">政读</span><span>Zhèngdú</span></button>
+    <div class="stats"><span>🔥 <b id="streak">0</b></span><span>⚡ <b id="xp">0</b></span><span>❤️ <b id="hearts">5</b></span></div>
+  </header>
+  <main id="screen"></main>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="learn">🗺️<span>Ruta</span></button>
+    <button class="nav-btn" data-tab="hanzi">汉<span>Hanzi</span></button>
+    <button class="nav-btn" data-tab="words">词<span>Palabras</span></button>
+    <button class="nav-btn" data-tab="read">📖<span>Leer</span></button>
+    <button class="nav-btn" data-tab="practice">🎯<span>Repasar</span></button>
+    <button class="nav-btn" data-tab="profile">👤<span>Perfil</span></button>
+  </nav>
+</div>
+<div id="modal" class="modal hidden"></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
