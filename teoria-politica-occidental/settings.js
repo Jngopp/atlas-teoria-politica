@@ -1,6 +1,7 @@
 (()=>{
  const btn=document.querySelector('#settingsBtn'),modal=document.querySelector('#modal');
  if(!btn||!modal)return;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
  function openSettings(){
   modal.classList.remove('hidden');
   modal.innerHTML=`<div class="sys-shell settings-shell"><div class="settings-head"><button id="closeSettings">×</button><div><div class="q-kicker">⚙️ AJUSTES</div><h2>POLIS</h2></div></div>
@@ -8,7 +9,7 @@
     <button class="settings-action" data-reset="systems"><span>🧠</span><div><b>Reiniciar solo Sistemas</b><small>Borra Platón, Hobbes, Marx, enseñanza, descubrimiento y duelo.</small></div></button>
     <button class="settings-action danger" data-reset="all"><span>↺</span><div><b>Reiniciar todo POLIS</b><small>Borra ruta, XP, corazones, SRS, benchmarks y Sistemas.</small></div></button>
    </section>
-   <section class="settings-card"><h3>Cómo aprende Sistemas</h3><div class="settings-flow"><span>🔎 Descubrí</span><i>›</i><span>📘 Aprendé</span><i>›</i><span>🎯 Probalo</span><i>›</i><span>🧠 Integrá</span></div><p class="settings-note">La fase Descubrí es de bajo riesgo: una hipótesis incorrecta no quita corazones. En Aprendé aparecen términos técnicos en lengua original y una cita primaria antes de practicar.</p></section>
+   <section class="settings-card"><h3>Cómo aprende Sistemas</h3><div class="settings-flow"><span>🔎 Descubrí</span><i>›</i><span>📘 Aprendé</span><i>›</i><span>🎯 Probalo</span><i>›</i><span>🧠 Integrá</span></div><p class="settings-note">La fase Descubrí es de bajo riesgo: una hipótesis incorrecta no quita corazones.</p></section>
    <div id="settingsConfirm"></div></div>`;
   document.querySelector('#closeSettings').onclick=closeSettings;
   document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>askReset(b.dataset.reset));
@@ -22,10 +23,10 @@
   document.querySelector('#confirmReset').onclick=()=>performReset(scope);
  }
  function performReset(scope){
-  if(scope==='systems')Object.keys(localStorage).filter(k=>k.startsWith('polis-systems')).forEach(k=>localStorage.removeItem(k));
+  if(scope==='systems')localStorage.removeItem('polis-systems-v1');
   else Object.keys(localStorage).filter(k=>k.startsWith('polis-')).forEach(k=>localStorage.removeItem(k));
   modal.innerHTML=`<div class="sys-shell"><div class="reset-done"><span>✓</span><h2>Progreso reiniciado</h2><p>${scope==='systems'?'Sistemas vuelve a empezar desde la primera inferencia.':'POLIS vuelve a empezar desde cero.'}</p></div></div>`;
-  setTimeout(()=>location.replace(location.pathname+'?v=7&reset=1'),650);
+  setTimeout(()=>location.replace(location.pathname+'?v=8&reset=1'),650);
  }
  btn.onclick=openSettings;
  window.POLIS_SETTINGS={open:openSettings};
