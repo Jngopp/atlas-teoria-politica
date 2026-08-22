@@ -9,6 +9,7 @@
     if(src.includes(broken)) src=src.replace(broken,fixed);
     new Function(`${src}\n//# sourceURL=polis-app-runtime.js`)();
     window.POLIS_BOOT_ERROR=null;
+    window.dispatchEvent(new Event('polis:ready'));
   }catch(error){
     window.POLIS_BOOT_ERROR=`${error.name||'Error'}: ${error.message||error}`;
     console.error('POLIS boot error',error);
