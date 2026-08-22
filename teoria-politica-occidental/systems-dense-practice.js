@@ -4,14 +4,16 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const shuffle=a=>[...a].sort(()=>Math.random()-.5);
 function lessons(){return Object.values(window.POLIS_SYSTEM_TEACHING||{}).flat()}
 function currentLesson(){const title=modal.querySelector('.teach-card h2')?.textContent?.trim();return lessons().find(l=>l.title===title)}
+function meaning(l,t){return l.id.startsWith('plato')?(t[2]||t[1]):(t[1]||t[2])}
 function openTermCheck(l,proceed){
  const terms=l.terms||[];if(!terms.length)return openRelationCheck(l,proceed);
  const target=terms[Math.min(terms.length-1,Math.max(0,(l.id.match(/(\d+)$/)?.[1]||1)-1)%terms.length)];
- const opts=shuffle(terms.map(t=>({label:t[2]||t[1],term:t[0],correct:t===target})));
- modal.innerHTML=`<div class="sys-shell"><section class="dense-check"><div class="learning-steps"><span class="done">1 🔎 Descubrí</span><i>›</i><span class="done">2 📘 Aprendé</span><i>›</i><span class="active">3a 🧩 Términos</span><i>›</i><span>3b 🔗 Relación</span></div><div class="dense-check-label">TÉRMINO TÉCNICO</div><h2>${esc(target[0])}</h2>${target[1]?`<p class="term-pron">${esc(target[1])}</p>`:''}<p>¿Cuál es la equivalencia conceptual correcta en esta microlección?</p><div class="dense-check-options">${opts.map((o,i)=>`<button data-dopt="${i}">${esc(o.label)}</button>`).join('')}</div><div id="denseFb"></div><button id="denseNext" class="sys-primary full" disabled>Continuar</button></section></div>`;
+ const opts=shuffle(terms.map(t=>({label:meaning(l,t),term:t[0],correct:t===target})));
+ const translit=l.id.startsWith('plato')&&target[1]?`<p class="term-pron">${esc(target[1])}</p>`:'';
+ modal.innerHTML=`<div class="sys-shell"><section class="dense-check"><div class="learning-steps"><span class="done">1 🔎 Descubrí</span><i>›</i><span class="done">2 📘 Aprendé</span><i>›</i><span class="active">3a 🧩 Términos</span><i>›</i><span>3b 🔗 Relación</span></div><div class="dense-check-label">TÉRMINO TÉCNICO</div><h2>${esc(target[0])}</h2>${translit}<p>¿Cuál es la equivalencia conceptual correcta en esta microlección?</p><div class="dense-check-options">${opts.map((o,i)=>`<button data-dopt="${i}">${esc(o.label)}</button>`).join('')}</div><div id="denseFb"></div><button id="denseNext" class="sys-primary full" disabled>Continuar</button></section></div>`;
  let chosen=null;const next=modal.querySelector('#denseNext'),fb=modal.querySelector('#denseFb');
  function wire(){modal.querySelectorAll('[data-dopt]').forEach(b=>b.onclick=()=>{chosen=+b.dataset.dopt;modal.querySelectorAll('[data-dopt]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');next.disabled=false})}wire();
- next.onclick=()=>{const ok=opts[chosen]?.correct;if(ok){fb.innerHTML=`<div class="dense-good">✓ ${esc(target[0])} → ${esc(target[2]||target[1])}</div>`;next.textContent='Reconstruir la relación →';next.disabled=false;next.onclick=()=>openRelationCheck(l,proceed);return}fb.innerHTML=`<div class="dense-wrong"><b>Equivalencia correcta</b><p>${esc(target[0])} → ${esc(target[2]||target[1])}</p><small>Esto es práctica de aprendizaje: no perdés corazones.</small></div>`;next.disabled=true;wire()}
+ next.onclick=()=>{const ok=opts[chosen]?.correct;if(ok){fb.innerHTML=`<div class="dense-good">✓ ${esc(target[0])} → ${esc(meaning(l,target))}</div>`;next.textContent='Reconstruir la relación →';next.disabled=false;next.onclick=()=>openRelationCheck(l,proceed);return}fb.innerHTML=`<div class="dense-wrong"><b>Equivalencia correcta</b><p>${esc(target[0])} → ${esc(meaning(l,target))}</p><small>Esto es práctica de aprendizaje: no perdés corazones.</small></div>`;next.disabled=true;wire()}
 }
 function openRelationCheck(l,proceed){
  const rel=l.relation||[];if(rel.length<2)return finish(l,proceed);
