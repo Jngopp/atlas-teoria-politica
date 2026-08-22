@@ -1,5 +1,5 @@
-const CACHE='polis-western-v5';
-const CORE=['./','index.html','styles.css','systems.css','systems-teaching.css','curriculum.js','app.js','app-loader.js','genealogies.js','enrichment.js','systems-data.js','systems-engine.js','systems-teaching-data.js','systems-teaching-loader.js','manifest.webmanifest','icon.svg','../data.js','../world-context-data.js'];
+const CACHE='polis-western-v6';
+const CORE=['./','index.html','styles.css','systems.css','systems-teaching.css','learning-flow.css','curriculum.js','app.js','app-loader.js','genealogies.js','enrichment.js','systems-data.js','systems-engine.js','systems-teaching-data.js','systems-discovery-data.js','systems-teaching-loader.js','settings.js','manifest.webmanifest','icon.svg','../data.js','../world-context-data.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 function put(req,resp){if(resp&&resp.ok&&new URL(req.url).origin===location.origin){const cp=resp.clone();caches.open(CACHE).then(c=>c.put(req,cp))}return resp}
