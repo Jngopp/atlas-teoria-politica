@@ -8,7 +8,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="systems.css?v=4">
+<link rel="stylesheet" href="systems.css?v=5">
+<link rel="stylesheet" href="systems-teaching.css?v=5">
 <title>POLIS · Teoría Política Occidental</title>
 </head>
 <body>
@@ -49,15 +50,17 @@ setTimeout(()=>{
  if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.querySelector('.systems-page') && !s.textContent.includes('Diagnóstico:')){
   s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El curso base está publicado, pero el motor no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
  }
-},2200);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=4').catch(()=>{}));
+},2600);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=5').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
-<script src="systems-data.js?v=4"></script>
-<script src="systems-engine.js?v=4"></script>
+<script src="systems-data.js?v=5"></script>
+<script src="systems-teaching-data.js?v=5"></script>
+<script src="systems-teaching-loader.js?v=5"></script>
 <script>
 window.addEventListener('polis:ready',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
-setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},900);
+window.addEventListener('polis:systemsReady',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
+setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},1100);
 </script>
 </body>
 </html>
