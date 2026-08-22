@@ -8,6 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="systems.css?v=4">
 <title>POLIS · Teoría Política Occidental</title>
 </head>
 <body>
@@ -21,6 +22,7 @@
 </main>
 <nav class="bottom-nav">
  <button class="nav-btn active" data-tab="route">🗺️<span>Ruta</span></button>
+ <button class="nav-btn" id="systemsBtn">🧠<span>Sistemas</span></button>
  <button class="nav-btn" data-tab="works">📚<span>Obras</span></button>
  <button class="nav-btn" data-tab="concepts">🧬<span>Conceptos</span></button>
  <button class="nav-btn" data-tab="compare">⚖️<span>Comparar</span></button>
@@ -44,12 +46,14 @@ window.addEventListener('error',e=>{
 <script>
 setTimeout(()=>{
  const s=document.getElementById('screen');
- if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.textContent.includes('Diagnóstico:')){
+ if(s && !s.querySelector('.module') && !s.querySelector('.works-grid') && !s.querySelector('.concept-grid') && !s.querySelector('.skill-grid') && !s.querySelector('.systems-page') && !s.textContent.includes('Diagnóstico:')){
   s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El curso base está publicado, pero el motor no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||'carga incompleta de recursos')+'</p></section></div>';
  }
 },2200);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=3').catch(()=>{}));
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=4').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
+<script src="systems-data.js?v=4"></script>
+<script src="systems-engine.js?v=4"></script>
 </body>
 </html>
