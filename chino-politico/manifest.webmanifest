@@ -1,0 +1,12 @@
+{
+  "name":"政读 Zhèngdú — Chino político",
+  "short_name":"政读",
+  "description":"Chino simplificado orientado a la lectura de textos políticos chinos.",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#fff8f0",
+  "theme_color":"#aa342a",
+  "lang":"es",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
