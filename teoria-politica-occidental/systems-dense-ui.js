@@ -1,6 +1,7 @@
 (()=>{
 const screen=document.querySelector('#screen'),modal=document.querySelector('#modal');
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function currentId(){try{return JSON.parse(localStorage.getItem('polis-systems-v1')||'{}').current||null}catch(e){return null}}
 function allLessons(){return Object.entries(window.POLIS_SYSTEM_TEACHING||{}).flatMap(([sys,ls])=>ls.map((l,i)=>({...l,sys,seq:i+1})))}
 function enrichTeaching(){
  const card=modal?.querySelector('.teach-card');
@@ -14,7 +15,7 @@ function enrichTeaching(){
  const q=l.quote;
  const block=document.createElement('div');
  block.className='dense-concept-block';
- block.innerHTML=`<div class="lesson-seq">Microlección ${l.seq}/10 · ${l.sys==='plato'?'griego':l.sys==='hobbes'?'inglés':'alemán'} original</div>
+ block.innerHTML=`<div class="lesson-seq">Microlección ${l.seq}/10 · ${l.sys==='plato'?'griego':l.sys==='hobbes'?'inglés original':'alemán original'}</div>
  ${terms?`<section class="term-panel"><div class="dense-label">Términos técnicos</div><div class="term-grid">${terms}</div></section>`:''}
  ${q?`<section class="quote-panel"><div class="dense-label">Cita central · después de la inferencia</div><blockquote>${esc(q.original)}</blockquote><p>${esc(q.translation)} <small class="pedagogical-translation">(traducción pedagógica)</small></p><footer><b>${esc(q.source)}</b>${q.note?`<span>${esc(q.note)}</span>`:''}</footer></section>`:''}`;
  anchor.insertAdjacentElement('afterend',block);
@@ -24,8 +25,7 @@ function enrichTeaching(){
 function enrichGuide(){
  const shell=modal?.querySelector('.guide-shell'); if(!shell||shell.dataset.dense==='1')return;
  shell.dataset.dense='1';
- const id=(()=>{try{return JSON.parse(localStorage.getItem('polis-systems-v1')||'{}').current}catch(e){return null}})();
- const lessons=window.POLIS_SYSTEM_TEACHING?.[id]||[];
+ const id=currentId(); const lessons=window.POLIS_SYSTEM_TEACHING?.[id]||[];
  shell.querySelectorAll('.guide-lesson').forEach((el,i)=>{
    const l=lessons[i]; if(!l)return;
    const terms=(l.terms||[]).slice(0,4).map(t=>`<span><b>${esc(t[0])}</b> · ${esc(t[2]||t[1]||'')}</span>`).join('');
@@ -35,10 +35,8 @@ function enrichGuide(){
 }
 function groupPath(){
  const path=screen?.querySelector('.lesson-path'); if(!path||path.dataset.dense==='1')return;
- const id=(()=>{try{return JSON.parse(localStorage.getItem('polis-systems-v1')||'{}').current}catch(e){return null}})();
- const lessons=window.POLIS_SYSTEM_TEACHING?.[id]||[]; if(!lessons.length)return;
- path.dataset.dense='1';
- const rows=[...path.querySelectorAll('.path-row')];
+ const id=currentId(); const lessons=window.POLIS_SYSTEM_TEACHING?.[id]||[]; if(!lessons.length)return;
+ path.dataset.dense='1'; const rows=[...path.querySelectorAll('.path-row')];
  lessons.forEach((l,i)=>{
    const row=rows[i*2]; if(!row)return;
    const terms=(l.terms||[]).slice(0,2).map(t=>t[0]).join(' · ');
@@ -48,10 +46,22 @@ function groupPath(){
  if(title?.classList.contains('section-title'))title.textContent='10 microlecciones · 20 desafíos';
 }
 function enrichMap(){
- const map=screen?.querySelector('.system-map'); if(!map||map.dataset.dense==='1')return;
+ const map=screen?.querySelector('.system-map'); if(!map)return;
+ const id=currentId(),sys=window.POLIS_SYSTEMS?.systems?.find(x=>x.id===id),lessons=window.POLIS_SYSTEM_TEACHING?.[id]||[];
+ if(!sys||!lessons.length)return;
+ const state=(()=>{try{return JSON.parse(localStorage.getItem('polis-systems-v1')||'{}')}catch(e){return {}}})();
+ const p=state.progress?.[id]||{}; const done=sys.activities.filter(a=>p[a.id]?.done).length;
+ const unlock=Math.min(lessons.length,Math.max(1,Math.floor(done/2)+1));
+ const nodes=[...map.querySelectorAll('.map-node')];
+ nodes.forEach((el,i)=>{
+   const revealed=i<unlock;
+   el.classList.toggle('revealed',revealed);el.classList.toggle('locked',!revealed);
+   const badge=el.querySelector('span'),label=el.querySelector('b');
+   if(badge)badge.textContent=revealed?String(i+1):'🔒';
+   if(label)label.textContent=revealed?(sys.nodes[i]||lessons[i]?.title||'Microlección'):'por descubrir';
+ });
+ const head=map.querySelector('.map-title span');if(head)head.textContent=`${unlock}/${lessons.length} microlecciones reveladas`;
  map.dataset.dense='1';
- const head=map.querySelector('.map-title span');
- if(head)head.textContent=head.textContent.replace('nodos','microlecciones');
 }
 const obs=new MutationObserver(()=>{enrichTeaching();enrichGuide();groupPath();enrichMap()});
 if(screen)obs.observe(screen,{childList:true,subtree:true});
