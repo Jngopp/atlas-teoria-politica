@@ -34,7 +34,7 @@
       const lang=opts.lang||langFor(text);
       const u=new SpeechSynthesisUtterance(text);
       u.lang=lang;
-      u.rate=opts.rate||((lang==='el-GR')?.72:.78);
+      u.rate=opts.rate||(lang==='el-GR' ? .72 : .78);
       u.pitch=1;
       const voice=chooseVoice(lang);if(voice)u.voice=voice;
       if(active)active.classList.remove('speaking');
