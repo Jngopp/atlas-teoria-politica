@@ -8,10 +8,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="systems.css?v=9">
-<link rel="stylesheet" href="systems-teaching.css?v=9">
-<link rel="stylesheet" href="learning-flow.css?v=9">
-<link rel="stylesheet" href="systems-dense.css?v=9">
+<link rel="stylesheet" href="systems.css?v=10">
+<link rel="stylesheet" href="systems-teaching.css?v=10">
+<link rel="stylesheet" href="learning-flow.css?v=10">
+<link rel="stylesheet" href="systems-dense.css?v=10">
+<link rel="stylesheet" href="systems-speech.css?v=10">
 <title>POLIS · Teoría Política Occidental</title>
 </head>
 <body>
@@ -44,17 +45,18 @@ window.addEventListener('error',e=>{const where=e.filename?` · ${e.filename.spl
 <script src="app-loader.js?v=3"></script>
 <script>
 setTimeout(()=>{const s=document.getElementById('screen');if(s&&!s.querySelector('.module')&&!s.querySelector('.works-grid')&&!s.querySelector('.concept-grid')&&!s.querySelector('.skill-grid')&&!s.querySelector('.systems-page')&&!s.textContent.includes('Diagnóstico:')){s.innerHTML='<div class="page"><section class="hero"><div class="eyebrow">POLIS</div><h1>La interfaz no pudo iniciar</h1><p>El núcleo no terminó de cargar.</p></section><section class="card"><b>Diagnóstico:</b><p class="note">'+(window.POLIS_BOOT_ERROR||window.POLIS_LEARNING_ERROR||'carga incompleta de recursos')+'</p></section></div>'; }},4200);
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=9').catch(()=>{}));
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=10').catch(()=>{}));
 </script>
 <script src="enrichment.js"></script>
-<script src="systems-data.js?v=9"></script>
-<script src="systems-teaching-data.js?v=9"></script>
-<script src="systems-discovery-data.js?v=9"></script>
-<script src="systems-v9-bootstrap.js?v=9"></script>
+<script src="systems-data.js?v=10"></script>
+<script src="systems-teaching-data.js?v=10"></script>
+<script src="systems-discovery-data.js?v=10"></script>
+<script src="systems-speech.js?v=10"></script>
+<script src="systems-v10-bootstrap.js?v=10"></script>
 <script>
 window.addEventListener('polis:ready',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
 window.addEventListener('polis:systemsReady',()=>setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0),{once:true});
-window.addEventListener('polis:v9Ready',e=>{setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0);const failures=e.detail?.failures||[];if(failures.length)console.warn('POLIS inició omitiendo capas avanzadas:',failures);},{once:true});
+window.addEventListener('polis:v10Ready',e=>{setTimeout(()=>window.POLIS_SYSTEMS_UI?.renderHome(),0);const failures=e.detail?.failures||[];if(failures.length)console.warn('POLIS inició omitiendo capas avanzadas:',failures);},{once:true});
 setTimeout(()=>{if(window.POLIS_SYSTEMS_UI&&!document.querySelector('.systems-page'))window.POLIS_SYSTEMS_UI.renderHome()},1800);
 </script>
 </body>
