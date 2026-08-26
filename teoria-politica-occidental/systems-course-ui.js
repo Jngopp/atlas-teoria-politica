@@ -1,0 +1,14 @@
+(()=>{
+const screen=document.querySelector('#screen');if(!screen)return;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function current(){try{return JSON.parse(localStorage.getItem('polis-systems-v1')||'{}').current||null}catch(e){return null}}
+function list(items,cls='course-list'){return `<ul class="${cls}">${(items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`}
+function chain(items){return `<div class="course-chain">${(items||[]).map((x,i)=>`${i?'<i>→</i>':''}<span><b>${i+1}</b>${esc(x)}</span>`).join('')}</div>`}
+function profile(c){return `<section class="course-profile" id="courseProfile"><div class="course-profile-head"><div><span class="course-badge">DEL CURSO DE TEORÍA POLÍTICA</span><h2>Clave de lectura</h2></div><span class="course-book">🎓</span></div><div class="course-core"><div><b>Problema rector</b><p>${esc(c.problem)}</p></div><div><b>Tesis de lectura</b><p>${esc(c.thesis)}</p></div></div><details open><summary>🧭 Arquitectura del argumento</summary>${chain(c.architecture)}</details><details><summary>🧩 Vocabulario que hay que dominar</summary>${list(c.concepts,'course-concepts')}</details><details><summary>⚖️ Problemas de interpretación</summary>${list(c.debates)}</details><details><summary>🔗 Puentes con el resto del curso</summary>${list(c.connections)}</details><details><summary>🌍 Contexto y recepción</summary><p>${esc(c.context)}</p><p><b>Recepciones:</b> ${esc(c.reception)}</p></details><p class="course-method-note"><b>Método:</b> reconstruí primero el problema y el lenguaje propio del autor; compará después. Las equivalencias con categorías posteriores son herramientas analíticas, no identidades históricas.</p></section>`}
+function enrichSystem(){const banner=screen.querySelector('.system-banner');if(!banner||screen.querySelector('#courseProfile'))return;const id=current();const c=window.POLIS_COURSE_ENRICHMENT?.[id];if(!c)return;banner.insertAdjacentHTML('afterend',profile(c))}
+function enrichHome(){const cards=[...screen.querySelectorAll('.world-card')];if(!cards.length)return;const systems=window.POLIS_SYSTEMS?.systems||[];cards.forEach((card,i)=>{if(card.querySelector('.course-world-hook'))return;const c=window.POLIS_COURSE_ENRICHMENT?.[systems[i]?.id];if(!c)return;const meta=card.querySelector('.world-meta');const el=document.createElement('div');el.className='course-world-hook';el.innerHTML=`<b>Pregunta del curso</b><span>${esc(c.problem)}</span>`;(meta||card.querySelector('.world-progress')||card).insertAdjacentElement('afterend',el)})}
+let raf=0;function refresh(){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{enrichHome();enrichSystem()})}
+new MutationObserver(refresh).observe(screen,{childList:true,subtree:true});
+window.addEventListener('polis:systemsReady',refresh);window.addEventListener('polis:v12Ready',refresh);setTimeout(refresh,800);
+window.POLIS_COURSE_UI={refresh};
+})();
