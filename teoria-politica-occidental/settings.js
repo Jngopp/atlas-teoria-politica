@@ -28,7 +28,7 @@
   if(scope==='systems')localStorage.removeItem('polis-systems-v1');
   else Object.keys(localStorage).filter(k=>k.startsWith('polis-')).forEach(k=>localStorage.removeItem(k));
   modal.innerHTML=`<div class="sys-shell"><div class="reset-done"><span>✓</span><h2>Progreso reiniciado</h2><p>${scope==='systems'?'Sistemas vuelve a empezar desde la primera inferencia.':'POLIS vuelve a empezar desde cero.'}</p></div></div>`;
-  setTimeout(()=>location.replace(location.pathname+'?v=11&reset=1'),650);
+  setTimeout(()=>location.replace(location.pathname+'?v=12&reset=1'),650);
  }
  btn.onclick=openSettings;
  window.POLIS_SETTINGS={open:openSettings};
