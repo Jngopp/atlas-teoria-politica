@@ -1,4 +1,4 @@
-// Reparación estructural V4: dossier único, sinopsis, texto primario y visualizaciones estables.
+// Reparación estructural V5: dossier único, curso, sinopsis, texto primario y visualizaciones estables.
 (function(){
  const el=id=>document.getElementById(id);
  const esc=s=>(s??'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -7,10 +7,11 @@
  const uniq=a=>[...new Set(a)];
  function concepts(o){return `<div class="v2-concepts">${Object.entries(o||{}).map(([k,v])=>`<article><b>${esc(k)}</b><span>${esc(v)}</span></article>`).join('')}</div>`;}
  function work(id){return WORKS.find(w=>w.id===id);}
- function safeGuide(w){try{return typeof getRichStudyGuide==='function'?getRichStudyGuide(w):(typeof getStudyGuide==='function'?getStudyGuide(w):null)}catch{return null}}
+ function safeGuide(w){try{const base=typeof getRichStudyGuide==='function'?getRichStudyGuide(w):(typeof getStudyGuide==='function'?getStudyGuide(w):null);return window.CourseAtlas?.enrichGuide?window.CourseAtlas.enrichGuide(base,w):base}catch{return null}}
  function safeClass(w){try{return typeof getMiniClass==='function'?getMiniClass(w):null}catch{return null}}
  function synopsisBlock(w){try{return window.ClassicReader?.synopsisHTML(w)||''}catch{return''}}
  function primaryTextBlock(w){try{return window.ClassicReader?.textHTML(w)||''}catch{return''}}
+ function courseBlock(w){try{return window.CourseAtlas?.html(w)||''}catch{return''}}
 
  async function openDossier(id){
   const w=work(id); if(!w)return;
@@ -25,6 +26,7 @@
    <div class="v2-dossier-grid"><main>
     <section class="v2-lecture"><div class="eyebrow">CLASE UNIVERSITARIA</div><h2>Cómo leer ${esc(w.title)}</h2>${paras(mc.lecture?.length?mc.lecture:g.summary)}</section>
     ${synopsisBlock(w)}
+    ${courseBlock(w)}
     <section class="v2-block"><div class="v2-number">01</div><div><div class="eyebrow">PROBLEMA Y TESIS</div><h2>Qué problema intenta resolver y qué respuesta construye</h2>${paras(g.problemAnalysis?.length?g.problemAnalysis:[w.context,w.thesis])}<div class="v2-thesis-callout"><b>Tesis en una frase</b><p>${esc(w.thesis)}</p></div></div></section>
     <section class="v2-block"><div class="v2-number">02</div><div><div class="eyebrow">RECORRIDO ARGUMENTAL</div><h2>Cómo avanza el razonamiento</h2><p class="v2-intro-note">No es un índice mecánico: estos pasos muestran qué función cumple cada momento dentro de la respuesta general de la obra.</p>${list(g.architecture?.length?g.architecture:mc.route)}</div></section>
     <section class="v2-block"><div class="v2-number">03</div><div><div class="eyebrow">CONCEPTOS</div><h2>Vocabulario central, definido en contexto</h2><p class="v2-intro-note">Las definiciones corresponden al problema histórico de la obra. El mismo término puede significar algo distinto en otro autor o período.</p>${concepts(g.keys)}</div></section>
