@@ -100,7 +100,10 @@
   'Juan Domingo Perón→Silvia Sigal y Eliseo Verón':'critical_reception','Juan Domingo Perón→León Rozitchner':'critical_reception',
   'Juan Domingo Perón→Damián Selci':'critical_reception','Antonio Gramsci→Juan Carlos Portantiero':'reinterpretation',
   'Juan Bautista Alberdi→Natalio R. Botana':'critical_reception','Domingo F. Sarmiento→Natalio R. Botana':'critical_reception',
-  'Ernesto Laclau→Damián Selci':'critical_reception','Nicolás Maquiavelo→Eduardo Rinesi':'reinterpretation','Thomas Hobbes→Eduardo Rinesi':'reinterpretation'
+  'Ernesto Laclau→Damián Selci':'critical_reception','Nicolás Maquiavelo→Eduardo Rinesi':'reinterpretation','Thomas Hobbes→Eduardo Rinesi':'reinterpretation',
+  'Juan B. Justo→Gino Germani':'conceptual_predecessor','Juan Domingo Perón→Arturo Enrique Sampay':'intellectual_dialogue',
+  'Juan Domingo Perón→Arturo Jauretche':'shared_tradition','Juan Carlos Portantiero→José Nun':'intellectual_dialogue',
+  'Carlos Santiago Nino→José Nun':'shared_tradition'
  };
 
  function authorEntity(name){
@@ -139,7 +142,7 @@
   Object.entries(AUTHOR_SPECIAL).forEach(([name,s])=>(s.members||[]).forEach(m=>{const a=authorEntity(m);authors[a.id]=authors[a.id]||a;}));
 
   const concepts={};
-  conceptsArr.forEach(c=>{const label=Array.isArray(c)?c[0]:c.label,definition=Array.isArray(c)?c[1]:c.definition;const id='concept:'+slug(label);concepts[id]={id,label,slug:slug(label),definition,workIds:[]};});
+  conceptsArr.forEach(c=>{const label=Array.isArray(c)?c[0]:c.label,definition=Array.isArray(c)?c[1]:c.definition;const id='concept:'+slug(label);concepts[id]={id,label,slug:slug(label),definition,definitionStatus:'defined',workIds:[]};});
 
   const traditions={};
   works.forEach(w=>{const id='tradition:'+slug(w.trad);traditions[id]=traditions[id]||{id,label:w.trad,slug:slug(w.trad),workIds:[]};traditions[id].workIds.push(w.id);});
@@ -151,7 +154,7 @@
   const normalizedWorks={};
   works.forEach(w=>{
    const authorId='author:'+slug(w.author),traditionId='tradition:'+slug(w.trad),eraId='era:'+w.era;
-   const conceptIds=(w.concepts||[]).map(label=>{const id='concept:'+slug(label);if(!concepts[id])concepts[id]={id,label,slug:slug(label),definition:'Definición pendiente de normalización editorial.',workIds:[]};concepts[id].workIds.push(w.id);return id;});
+   const conceptIds=(w.concepts||[]).map(label=>{const id='concept:'+slug(label);if(!concepts[id])concepts[id]={id,label,slug:slug(label),definition:'Definición pendiente de normalización editorial.',definitionStatus:'pending',workIds:[]};concepts[id].workIds.push(w.id);return id;});
    const problemIds=inferProblems(w);problemIds.forEach(id=>{if(problems[id])problems[id].workIds.push(w.id)});
    if(eras[eraId])eras[eraId].workIds.push(w.id);
    normalizedWorks[w.id]={
