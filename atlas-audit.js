@@ -1,5 +1,15 @@
-// Auditoría editorial del corpus. Se ejecuta después de cargar todas las capas.
+// Auditoría editorial visible del corpus. Se ejecuta después de cargar todas las capas.
 (function(){
+ function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+ function render(report){
+  const home=document.getElementById('home'); if(!home)return;
+  let box=document.getElementById('atlasEditorialStatus');
+  if(!box){box=document.createElement('section');box.id='atlasEditorialStatus';box.className='panel';box.style.cssText='padding:20px;margin-top:22px';home.appendChild(box);}
+  const issues=[...report.duplicates,...report.postdoctoral.missing,...report.postdoctoral.shallow,...report.argentina.missing,...report.structural.incomplete];
+  box.innerHTML='<div class="eyebrow">ESTADO EDITORIAL DEL CORPUS</div><h2 style="font:900 28px var(--serif);margin:6px 0 12px">Auditoría automática</h2>'+
+   '<div class="metrics" style="margin:0 0 12px"><div class="metric"><b>'+report.works+'</b><span>obras activas</span></div><div class="metric"><b>'+report.postdoctoral.complete+'/'+report.postdoctoral.expected+'</b><span>guías postdoctorales</span></div><div class="metric"><b>'+report.argentina.complete+'/'+report.argentina.expected+'</b><span>guías argentinas</span></div><div class="metric"><b>'+report.uniqueIds+'</b><span>IDs únicos</span></div></div>'+
+   '<p class="note">'+(report.ok?'Corpus sin incidencias estructurales detectadas en la auditoría actual.':'La auditoría detectó '+issues.length+' incidencia(s): '+esc(issues.slice(0,12).join(', '))+(issues.length>12?'…':'')+'.')+'</p>';
+ }
  function run(){
   const works=typeof WORKS!=='undefined'?WORKS:[];
   const ids=works.map(w=>w.id);
@@ -21,6 +31,7 @@
   window.ATLAS_AUDIT=report;
   document.documentElement.dataset.atlasAudit=report.ok?'ok':'issues';
   console.info('[Atlas] Auditoría editorial',report);
+  render(report);
   return report;
  }
  window.auditAtlas=run;
