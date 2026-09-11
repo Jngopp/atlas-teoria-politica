@@ -202,7 +202,7 @@
   };
   const API={
    db,
-   get(type,id){return db[type]?.[id]||null},
+   get(type,id){const aliases={work:'works',author:'authors',concept:'concepts',problem:'problems',tradition:'traditions',era:'eras',context:'contexts',politicalEntity:'politicalEntities',researchSource:'researchSources',genealogy:'genealogies'};return db[aliases[type]||type]?.[id]||null},
    list(type){return Object.values(db[type]||{})},
    relationsFor(type,id,predicate){return db.relations.filter(r=>(r.sourceType===type&&r.sourceId===id||r.targetType===type&&r.targetId===id)&&(!predicate||r.predicate===predicate))},
    worksByAuthor(id){return Object.values(db.works).filter(w=>w.authorId===id)},
