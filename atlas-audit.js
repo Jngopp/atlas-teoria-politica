@@ -19,7 +19,9 @@
    contexts:Object.keys(db.contexts).length,
    politicalEntities:Object.keys(db.politicalEntities).length,
    relations:db.relations.length,
-   genealogies:Object.keys(db.genealogies).length
+   genealogies:Object.keys(db.genealogies).length,
+   definedConcepts:Object.values(db.concepts).filter(c=>c.definitionStatus==='defined').length,
+   pendingConceptDefinitions:Object.values(db.concepts).filter(c=>c.definitionStatus==='pending').length
   };
   return {loaded:true,version:db.meta?.schemaVersion||null,counts,invalidRelations,duplicateRelationIds,worksWithoutProblems,needsReview,ok:invalidRelations.length===0&&duplicateRelationIds.length===0&&worksWithoutProblems.length===0&&counts.works===WORKS.length};
  }
@@ -32,7 +34,8 @@
   box.innerHTML='<div class="eyebrow">ESTADO EDITORIAL DEL CORPUS</div><h2 style="font:900 28px var(--serif);margin:6px 0 12px">Auditoría automática · Esquema V'+esc(report.schema.version||'—')+'</h2>'+
    '<div class="metrics" style="margin:0 0 12px"><div class="metric"><b>'+report.works+'</b><span>obras activas</span></div><div class="metric"><b>'+report.postdoctoral.complete+'/'+report.postdoctoral.expected+'</b><span>guías postdoctorales</span></div><div class="metric"><b>'+report.schema.counts.relations+'</b><span>relaciones normalizadas</span></div><div class="metric"><b>'+debt+'</b><span>relaciones por revisar</span></div></div>'+
    '<p class="note">'+(report.ok?'Corpus y esquema sin incidencias estructurales. Quedan '+debt+' relaciones intelectuales heredadas pendientes de clasificación editorial; no se presentan como “influencia” hasta ser revisadas.':'La auditoría detectó '+hardIssues.length+' incidencia(s) estructural(es): '+esc(hardIssues.slice(0,12).join(', '))+(hardIssues.length>12?'…':'')+'.')+'</p>'+
-   '<p class="note">Base normalizada: '+report.schema.counts.authors+' autorías · '+report.schema.counts.concepts+' conceptos · '+report.schema.counts.problems+' problemas · '+report.schema.counts.traditions+' tradiciones · '+report.schema.counts.contexts+' contextos.</p>';
+   '<p class="note">Base normalizada: '+report.schema.counts.authors+' autorías · '+report.schema.counts.concepts+' conceptos · '+report.schema.counts.problems+' problemas · '+report.schema.counts.traditions+' tradiciones · '+report.schema.counts.contexts+' contextos.</p>'+
+   '<p class="note">Definiciones conceptuales globales: '+report.schema.counts.definedConcepts+' consolidadas · '+report.schema.counts.pendingConceptDefinitions+' pendientes para la futura enciclopedia de conceptos.</p>';
  }
  function run(){
   const works=typeof WORKS!=='undefined'?WORKS:[];
