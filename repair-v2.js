@@ -45,9 +45,9 @@
 
  document.addEventListener('click',e=>{
   const card=e.target.closest?.('.card[data-id]');
-  if(card){e.preventDefault();e.stopPropagation();openDossier(card.dataset.id);return;}
+  if(card){e.preventDefault();e.stopPropagation();(window.openWork||openDossier)(card.dataset.id);return;}
   const vnode=e.target.closest?.('[data-v2work]');
-  if(vnode){e.preventDefault();openDossier(vnode.dataset.v2work);}
+  if(vnode){e.preventDefault();(window.openWork||openDossier)(vnode.dataset.v2work);}
  },true);
 
  function authorLabel(w){return w.author.replace('Tradición ','').replace('Karl Marx y Friedrich Engels','Marx / Engels').replace('Hamilton, Madison y Jay','Federalistas');}
