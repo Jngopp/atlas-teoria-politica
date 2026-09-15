@@ -190,8 +190,22 @@
   const dlg=document.getElementById('dlg');
   dlg?.addEventListener('close',()=>{if(suppressDialogClose)return;const r=parse();if(r.kind==='obra')navigate(lastNonWork.replace(/^#/,''),{replace:true})});
  }
+ function auditRoutes(){
+  const groups={
+   works:Object.keys(DB()?.works||{}).map(id=>routeFor('work',id)),
+   authors:Object.keys(DB()?.authors||{}).map(id=>routeFor('author',id)),
+   concepts:Object.keys(DB()?.concepts||{}).map(id=>routeFor('concept',id)),
+   problems:Object.keys(DB()?.problems||{}).map(id=>routeFor('problem',id)),
+   contexts:Object.keys(DB()?.contexts||{}).map(id=>routeFor('context',id)),
+   traditions:Object.keys(DB()?.traditions||{}).map(id=>routeFor('tradition',id)),
+   eras:Object.keys(DB()?.eras||{}).map(id=>routeFor('era',id))
+  };
+  const all=Object.values(groups).flat(),seen=new Set(),collisions=[];
+  all.forEach(x=>{if(seen.has(x))collisions.push(x);seen.add(x)});
+  return {counts:Object.fromEntries(Object.entries(groups).map(([k,v])=>[k,v.length])),total:all.length,unique:seen.size,collisions:[...new Set(collisions)],ok:collisions.length===0};
+ }
  function expose(){
-  window.AtlasRouter={navigate,apply,routeFor,parse,permalink:(type,id)=>location.origin+location.pathname+hashPath(routeFor(type,id))};
+  window.AtlasRouter={navigate,apply,routeFor,parse,audit:auditRoutes,permalink:(type,id)=>location.origin+location.pathname+hashPath(routeFor(type,id))};
   if(rawOpenWork)window.openWork=id=>navigate(routeFor('work',id));
  }
  function boot(){
