@@ -109,7 +109,8 @@
  function authorEntity(name){
   const spec=AUTHOR_SPECIAL[name]||{};
   const id='author:'+slug(name);
-  return {id,name,slug:slug(name),kind:spec.kind||'person',members:(spec.members||[]).map(n=>'author:'+slug(n)),workIds:[]};
+  const inferredKind=spec.kind||(/^(Tradición|Escuela)\b/i.test(name)?'tradition':'person');
+  return {id,name,slug:slug(name),kind:inferredKind,members:(spec.members||[]).map(n=>'author:'+slug(n)),workIds:[]};
  }
  function inferProblems(w){
   const c=new Set((w.concepts||[]).map(x=>String(x).toLowerCase()));
@@ -208,7 +209,10 @@
    get(type,id){const aliases={work:'works',author:'authors',concept:'concepts',problem:'problems',tradition:'traditions',era:'eras',context:'contexts',politicalEntity:'politicalEntities',researchSource:'researchSources',genealogy:'genealogies'};return db[aliases[type]||type]?.[id]||null},
    list(type){return Object.values(db[type]||{})},
    relationsFor(type,id,predicate){return db.relations.filter(r=>(r.sourceType===type&&r.sourceId===id||r.targetType===type&&r.targetId===id)&&(!predicate||r.predicate===predicate))},
-   worksByAuthor(id){return Object.values(db.works).filter(w=>w.authorId===id)},
+   worksByAuthor(id){
+    const collectiveIds=Object.values(db.authors).filter(a=>(a.members||[]).includes(id)).map(a=>a.id);
+    return Object.values(db.works).filter(w=>w.authorId===id||collectiveIds.includes(w.authorId));
+   },
    worksByConcept(id){return Object.values(db.works).filter(w=>w.conceptIds.includes(id))},
    worksByProblem(id){return Object.values(db.works).filter(w=>w.problemIds.includes(id))},
    search(q){const n=slug(q);return {works:Object.values(db.works).filter(w=>slug(w.title+' '+w.authorLabel+' '+w.problemText+' '+w.thesis).includes(n)),authors:Object.values(db.authors).filter(a=>slug(a.name).includes(n)),concepts:Object.values(db.concepts).filter(c=>slug(c.label+' '+c.definition).includes(n)),problems:Object.values(db.problems).filter(p=>slug(p.label+' '+p.question).includes(n))};},
