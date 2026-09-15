@@ -95,6 +95,7 @@
   return '<nav class="atlas-breadcrumb">'+items.map((x,i)=>i===items.length-1?'<span>'+esc(x[0])+'</span>':'<button data-route="'+x[1]+'">'+esc(x[0])+'</button><i>›</i>').join('')+'</nav>';
  }
  function renderAuthor(slug){
+  if(window.AtlasEntities?.renderAuthor&&window.AtlasEntities.renderAuthor(slug))return;
   const id='author:'+slug,a=API().get('author',id);if(!a)return render404('Autor',slug);
   const works=API().worksByAuthor(id),conceptIds=[...new Set(works.flatMap(w=>w.conceptIds))],problemIds=[...new Set(works.flatMap(w=>w.problemIds))];
   const sec=ensureEntityView();showView('entity');setTitle(a.name);
@@ -106,6 +107,7 @@
    '<section class="atlas-entity-section"><div class="eyebrow">RED INTELECTUAL</div><h2>Relaciones tipadas</h2><p class="note">Las flechas distinguen recepción, crítica, reinterpretación, diálogo y antecedentes; no significan “influencia” de manera automática.</p>'+relatedAuthors(id)+'</section>';
  }
  function renderConcept(slug){
+  if(window.AtlasEntities?.renderConcept&&window.AtlasEntities.renderConcept(slug))return;
   const id='concept:'+slug,c=API().get('concept',id);if(!c)return render404('Concepto',slug);
   const works=API().worksByConcept(id),problems=Object.values(DB().problems).filter(p=>(p.concepts||[]).some(x=>API().slug(x)===slug)||p.workIds.some(w=>works.some(x=>x.id===w)));
   const sec=ensureEntityView();showView('entity');setTitle(c.label);
@@ -115,6 +117,7 @@
    '<section class="atlas-entity-section"><div class="eyebrow">CORPUS</div><h2>Obras que trabajan este concepto</h2>'+workButtons(works.map(w=>w.id))+'</section>';
  }
  function renderProblem(id){
+  if(window.AtlasEntities?.renderProblem&&window.AtlasEntities.renderProblem(id))return;
   const p=API().get('problem',id);if(!p)return render404('Problema',id);
   const works=API().worksByProblem(id);
   const cids=[...new Set(works.flatMap(w=>w.conceptIds))];
@@ -165,7 +168,10 @@
   try{
    if(r.kind!=='obra')lastNonWork=location.hash||'#/biblioteca';
    if(r.kind!=='obra')closeDialog();
-   if(ROUTE_VIEWS[r.kind]){setTitle('');showView(ROUTE_VIEWS[r.kind]);if(r.kind==='mundo')setTimeout(()=>window.renderWorld?.(),0);return}
+   if(r.kind==='autores'){setTitle('Autores');showView('concepts');window.AtlasEntities?.renderIndex?.('authors');return}
+   if(r.kind==='problemas'){setTitle('Problemas');showView('concepts');window.AtlasEntities?.renderIndex?.('problems');return}
+   if(r.kind==='enciclopedia'){setTitle('Enciclopedia');showView('concepts');window.AtlasEntities?.renderIndex?.('concepts');return}
+   if(ROUTE_VIEWS[r.kind]){setTitle('');showView(ROUTE_VIEWS[r.kind]);if(r.kind==='mundo')setTimeout(()=>window.renderWorld?.(),0);if(r.kind==='conceptos')window.AtlasEntities?.renderIndex?.('concepts');return}
    if(r.kind==='obra')return openWorkRoute(r.id);
    if(r.kind==='autor')return renderAuthor(r.id);
    if(r.kind==='concepto')return renderConcept(r.id);
