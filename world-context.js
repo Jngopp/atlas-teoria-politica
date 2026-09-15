@@ -67,7 +67,8 @@
   legend.querySelector('[data-place-open]')?.addEventListener('click',e=>{if(typeof openWork==='function')openWork(e.currentTarget.dataset.placeOpen)});
  }
  function renderWorld(){ensureStyle();ensureDOM();const all=contexts();if(!all.length)return;render(document.getElementById('worldSelect')?.value||all[0].id)}
- window.renderWorld=renderWorld;\n window.renderWorldContext=function(id){ensureStyle();ensureDOM();const ctx=byId(id);if(ctx)render(id);else renderWorld();};
+ window.renderWorld=renderWorld;
+ window.renderWorldContext=function(id){ensureStyle();ensureDOM();const ctx=byId(id);if(ctx)render(id);else renderWorld();};
  function boot(){ensureStyle();ensureDOM();const b=document.querySelector('[data-v="world"]');if(b&&!b.dataset.worldBound){b.dataset.worldBound='1';b.addEventListener('click',()=>setTimeout(renderWorld,0));}renderWorld();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
