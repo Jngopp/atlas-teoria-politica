@@ -190,6 +190,8 @@
    if(direct){e.preventDefault();e.stopImmediatePropagation();navigate(direct.dataset.route);return}
    const nav=e.target.closest?.('[data-v],[data-go]');
    if(nav){const view=nav.dataset.v||nav.dataset.go,route=VIEW_ROUTES[view];if(route){e.preventDefault();e.stopImmediatePropagation();navigate('/'+route);return}}
+   const homeConcept=e.target.closest?.('#homeConcepts .chip');
+   if(homeConcept){const name=homeConcept.textContent?.trim();if(name){e.preventDefault();e.stopImmediatePropagation();navigate('/concepto/'+API().slug(name));return}}
    const concept=e.target.closest?.('#conceptGrid .concept');
    if(concept){const name=concept.querySelector('h3')?.textContent?.trim();if(name){e.preventDefault();e.stopImmediatePropagation();navigate('/concepto/'+API().slug(name));return}}
   },true);
