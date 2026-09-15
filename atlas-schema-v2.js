@@ -54,6 +54,13 @@
   ['public-sphere-deliberation','Esfera pública y deliberación','¿Cómo se forman opinión, razones públicas y decisiones colectivas?',['esfera pública','deliberación','palabra']]
  ].map(([id,label,question,concepts])=>({id,label,question,concepts}));
 
+ const CURATED_CONCEPT_WORKS={
+  'concept:legitimidad':['mencius','leviathan','locke','rousseau','weber','habermas','dussel','odonnell'],
+  'concept:secularizacion':['citygod','marsilius','spinoza','locke'],
+  'concept:tolerancia':['spinoza','locke'],
+  'concept:obligacion-politica':['leviathan','locke','rousseau']
+ };
+
  const AUTHOR_SPECIAL={
   'Tradición mesopotámica':{kind:'tradition'},
   'Tradición egipcia':{kind:'tradition'},
@@ -163,6 +170,11 @@
     problemText:w.problem,thesis:w.thesis,contextText:w.context,reader:w.reader||'',readerEs:w.readerEs||w.readerES||'',readerEn:w.readerEn||w.readerEN||'',
     source:'legacy-WORKS',schemaVersion:VERSION
    };
+  });
+
+  Object.entries(CURATED_CONCEPT_WORKS).forEach(([cid,wids])=>{
+   if(!concepts[cid])return;
+   wids.forEach(wid=>{const w=normalizedWorks[wid];if(!w)return;if(!w.conceptIds.includes(cid))w.conceptIds.push(cid);if(!concepts[cid].workIds.includes(wid))concepts[cid].workIds.push(wid)});
   });
 
   const politicalEntities={},contexts={};
