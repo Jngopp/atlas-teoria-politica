@@ -29,14 +29,15 @@
   const home=document.getElementById('home'); if(!home)return;
   let box=document.getElementById('atlasEditorialStatus');
   if(!box){box=document.createElement('section');box.id='atlasEditorialStatus';box.className='panel';box.style.cssText='padding:20px;margin-top:22px';home.appendChild(box);}
-  const hardIssues=[...report.duplicates,...report.postdoctoral.missing,...report.argentina.missing,...report.structural.incomplete,...report.schema.invalidRelations,...report.schema.duplicateRelationIds,...report.schema.worksWithoutProblems,...(report.routes?.collisions||[])];
+  const hardIssues=[...report.duplicates,...report.postdoctoral.missing,...report.argentina.missing,...report.structural.incomplete,...report.schema.invalidRelations,...report.schema.duplicateRelationIds,...report.schema.worksWithoutProblems,...(report.routes?.collisions||[]),...(report.encyclopedia?.authorsWithoutWorks||[]),...(report.encyclopedia?.conceptsWithoutWorks||[]),...(report.encyclopedia?.problemsWithoutWorks||[]),...(report.encyclopedia?.missingProblemEditorial||[])];
   const debt=report.schema.needsReview.length;
   box.innerHTML='<div class="eyebrow">ESTADO EDITORIAL DEL CORPUS</div><h2 style="font:900 28px var(--serif);margin:6px 0 12px">Auditoría automática · Esquema V'+esc(report.schema.version||'—')+'</h2>'+
    '<div class="metrics" style="margin:0 0 12px"><div class="metric"><b>'+report.works+'</b><span>obras activas</span></div><div class="metric"><b>'+report.postdoctoral.complete+'/'+report.postdoctoral.expected+'</b><span>guías postdoctorales</span></div><div class="metric"><b>'+report.schema.counts.relations+'</b><span>relaciones normalizadas</span></div><div class="metric"><b>'+debt+'</b><span>relaciones por revisar</span></div></div>'+
    '<p class="note">'+(report.ok?'Corpus y esquema sin incidencias estructurales. Quedan '+debt+' relaciones intelectuales heredadas pendientes de clasificación editorial; no se presentan como “influencia” hasta ser revisadas.':'La auditoría detectó '+hardIssues.length+' incidencia(s) estructural(es): '+esc(hardIssues.slice(0,12).join(', '))+(hardIssues.length>12?'…':'')+'.')+'</p>'+
    '<p class="note">Base normalizada: '+report.schema.counts.authors+' autorías · '+report.schema.counts.concepts+' conceptos · '+report.schema.counts.problems+' problemas · '+report.schema.counts.traditions+' tradiciones · '+report.schema.counts.contexts+' contextos.</p>'+
    '<p class="note">Definiciones conceptuales globales: '+report.schema.counts.definedConcepts+' consolidadas · '+report.schema.counts.pendingConceptDefinitions+' pendientes para la futura enciclopedia de conceptos.</p>'+
-   '<p class="note">Permalinks: '+(report.routes?.unique||0)+' rutas únicas de '+(report.routes?.total||0)+' entidades enrutable'+((report.routes?.total||0)!==1?'s':'')+' · '+((report.routes?.collisions||[]).length)+' colisiones.</p>';
+   '<p class="note">Permalinks: '+(report.routes?.unique||0)+' rutas únicas de '+(report.routes?.total||0)+' entidades enrutable'+((report.routes?.total||0)!==1?'s':'')+' · '+((report.routes?.collisions||[]).length)+' colisiones.</p>'+
+   '<p class="note">Enciclopedia V4: '+(report.encyclopedia?.authors||0)+' autores · '+(report.encyclopedia?.concepts||0)+' conceptos · '+(report.encyclopedia?.problems||0)+' problemas · '+(report.encyclopedia?.problemEditorial||0)+' problemas con desarrollo editorial.</p>';
  }
  function run(){
   const works=typeof WORKS!=='undefined'?WORKS:[];
@@ -48,14 +49,23 @@
   const structural=works.filter(w=>{try{const g=getRichStudyGuide(w);return !g||(g.problemAnalysis||[]).join(' ').length<250||(g.architecture||[]).length<3||Object.keys(g.keys||{}).length<3||(g.secondary||[]).length<3}catch{return true}}).map(w=>w.id);
   const schema=schemaAudit();
   const routes=window.AtlasRouter?.audit?window.AtlasRouter.audit():{counts:{},total:0,unique:0,collisions:[],ok:false};
+  const encyclopedia=(()=>{
+   const db=window.ATLAS_DB,api=window.AtlasDB,pe=window.AtlasEntities?.problemEditorial||{};
+   if(!db||!api)return {authors:0,concepts:0,problems:0,authorsWithoutWorks:[],conceptsWithoutWorks:[],problemsWithoutWorks:[],missingProblemEditorial:[],ok:false};
+   const authorsWithoutWorks=Object.values(db.authors).filter(a=>api.worksByAuthor(a.id).length===0).map(a=>a.id);
+   const conceptsWithoutWorks=Object.values(db.concepts).filter(x=>(x.workIds||[]).length===0).map(x=>x.id);
+   const problemsWithoutWorks=Object.values(db.problems).filter(x=>(x.workIds||[]).length===0).map(x=>x.id);
+   const missingProblemEditorial=Object.keys(db.problems).filter(id=>!pe[id]);
+   return {authors:Object.keys(db.authors).length,concepts:Object.keys(db.concepts).length,problems:Object.keys(db.problems).length,authorsWithoutWorks,conceptsWithoutWorks,problemsWithoutWorks,problemEditorial:Object.keys(pe).length,missingProblemEditorial,ok:authorsWithoutWorks.length===0&&conceptsWithoutWorks.length===0&&problemsWithoutWorks.length===0&&missingProblemEditorial.length===0};
+  })();
   const report={
    generatedAt:new Date().toISOString(),works:works.length,uniqueIds:new Set(ids).size,duplicates,
    postdoctoral:{...post},
    argentina:{expected:argentina.length,complete:argentina.length-argMissing.length,missing:argMissing,ok:argMissing.length===0},
    structural:{complete:works.length-structural.length,incomplete:structural,ok:structural.length===0},
-   schema,routes
+   schema,routes,encyclopedia
   };
-  report.ok=duplicates.length===0&&post.missing.length===0&&report.argentina.ok&&report.structural.ok&&schema.ok&&routes.ok;
+  report.ok=duplicates.length===0&&post.missing.length===0&&report.argentina.ok&&report.structural.ok&&schema.ok&&routes.ok&&encyclopedia.ok;
   window.ATLAS_AUDIT=report;
   document.documentElement.dataset.atlasAudit=report.ok?'ok':'issues';
   console.info('[Atlas] Auditoría editorial V2',report);
