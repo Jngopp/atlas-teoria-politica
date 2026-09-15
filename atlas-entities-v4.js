@@ -176,7 +176,7 @@
  }
 
  function indexData(kind){
-  if(kind==='authors')return Object.values(DB()?.authors||{}).map(a=>({id:a.id,label:a.name,meta:(a.workIds||[]).length+' obra'+((a.workIds||[]).length!==1?'s':''),route:route('author',a.id),search:a.name}));
+  if(kind==='authors')return Object.values(DB()?.authors||{}).map(a=>{const n=API().worksByAuthor(a.id).length;return {id:a.id,label:a.name,meta:n+' obra'+(n!==1?'s':'')+(a.kind==='collective'?' · autoría colectiva':a.kind==='tradition'?' · tradición autoral':''),route:route('author',a.id),search:a.name}});
   if(kind==='problems')return Object.values(DB()?.problems||{}).map(p=>({id:p.id,label:p.label,meta:(p.workIds||[]).length+' obras · '+p.question,route:route('problem',p.id),search:p.label+' '+p.question}));
   return Object.values(DB()?.concepts||{}).map(c=>({id:c.id,label:c.label,meta:(c.workIds||[]).length+' obras · '+(c.definitionStatus==='defined'?'definición global':'definición en construcción'),route:route('concept',c.id),search:c.label+' '+c.definition,status:c.definitionStatus}));
  }
