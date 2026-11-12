@@ -278,7 +278,7 @@ const DEEP_GUIDES={
  ['Diferencia con Berlin.','¿Puede existir interferencia intensa sin dominación?','Medición y alcance de dominación estructural.'],
  ['Neo-republicanismo.','Teoría democrática y laboral.'],
  ['Usar el ejemplo del esclavo con amo benevolente.','Distinguir interferencia de dominación.']),
- bolivar-j:DG(
+ 'bolivar-j':DG(
  ['La Carta de Jamaica interpreta la crisis imperial y plantea el problema de construir nuevas unidades políticas en sociedades atravesadas por guerra, fragmentación territorial y herencias coloniales.','Bolívar combina universalismo republicano con fuerte atención a condiciones locales. No supone que una forma constitucional pueda copiarse sin mediaciones entre geografía, historia y estructura social.'],
  ['Diagnóstico del dominio español.','Diversidad regional y dificultad de unidad.','Formas de gobierno posibles.','Proyección continental e independencia.'],
  {'independencia':'Ruptura de subordinación colonial y problema de construcción de autoridad nueva.','unidad americana':'Horizonte político condicionado por fragmentación territorial.','constitución':'Forma que debe adaptarse a condiciones históricas.','soberanía':'Capacidad efectiva de autodeterminación postimperial.'},

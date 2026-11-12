@@ -11,7 +11,7 @@
  function hashPath(path){const p=String(path||'').replace(/^#?\/?/,'');return '#/'+p}
  function parse(){
   const raw=(location.hash||'#/inicio').replace(/^#\/?/,'');
-  const parts=raw.split('/').filter(Boolean).map(decodeURIComponent);
+  let parts;try{parts=raw.split('?')[0].split('/').filter(Boolean).map(decodeURIComponent)}catch{parts=['ruta-invalida']}
   return {raw,kind:parts[0]||'inicio',id:parts.slice(1).join('/')};
  }
  function replaceOrPush(path,replace=false){
@@ -168,6 +168,7 @@
   try{
    if(r.kind!=='obra')lastNonWork=location.hash||'#/biblioteca';
    if(r.kind!=='obra')closeDialog();
+   if(['comparar','explorar','cuaderno','criterios'].includes(r.kind))return;
    if(r.kind==='autores'){setTitle('Autores');showView('concepts');window.AtlasEntities?.renderIndex?.('authors');return}
    if(r.kind==='problemas'){setTitle('Problemas');showView('concepts');window.AtlasEntities?.renderIndex?.('problems');return}
    if(r.kind==='enciclopedia'){setTitle('Enciclopedia');showView('concepts');window.AtlasEntities?.renderIndex?.('concepts');return}
@@ -184,6 +185,8 @@
  }
  function bindNavigation(){
   document.addEventListener('click',e=>{
+   const anchor=e.target.closest?.('.atlas-article-toc a');
+   if(anchor){const target=document.getElementById(anchor.getAttribute('href').slice(1));if(target){e.preventDefault();e.stopImmediatePropagation();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}return}
    const copy=e.target.closest?.('[data-copy-permalink]');
    if(copy){e.preventDefault();e.stopImmediatePropagation();copyCurrent(copy);return}
    const direct=e.target.closest?.('[data-route]');
